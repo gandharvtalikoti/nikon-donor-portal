@@ -1,7 +1,7 @@
 import React from 'react';
 import { CoordinationConfig, DonationBooking, DonationTypePreference } from '../../types';
 import { Calendar, Clock, AlertCircle, Info, ShieldAlert, Sparkles, Droplet, Layers } from 'lucide-react';
-import { checkDuplicateBooking } from '../../lib/coordinationEngine';
+import { checkDuplicateBooking, formatDateDMY } from '../../lib/coordinationEngine';
 
 interface Step4Props {
   config: CoordinationConfig;
@@ -72,7 +72,7 @@ export const Step4Availability: React.FC<Step4Props> = ({
             <h4 className="font-bold text-sm">Active Booking Already on Record</h4>
             <p className="leading-relaxed">
               Our records show an active booking for this phone number on{' '}
-              <strong>{duplicateCheck.activeBooking.bookingDate}</strong> (
+              <strong>{formatDateDMY(duplicateCheck.activeBooking.bookingDate)}</strong> (
               {duplicateCheck.activeBooking.timeSlot}) with status: "
               <strong>{duplicateCheck.activeBooking.bookingStatus}</strong>".
             </p>
@@ -94,7 +94,7 @@ export const Step4Availability: React.FC<Step4Props> = ({
             </p>
             {screeningResult.earliestEligibleDate && (
               <p className="text-xs font-semibold text-rose-800">
-                Recommended earliest date according to preliminary rules: {screeningResult.earliestEligibleDate}
+                Recommended earliest date according to preliminary rules: {formatDateDMY(screeningResult.earliestEligibleDate)}
               </p>
             )}
           </div>
@@ -102,17 +102,24 @@ export const Step4Availability: React.FC<Step4Props> = ({
       )}
 
       {/* Donation Type Confirmation */}
-      <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between text-xs">
+      <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
         <div className="flex items-center gap-2">
           {donationType === 'Single Donor Platelets (SDP)' ? (
-            <Sparkles className="w-4 h-4 text-rose-600" />
+            <Sparkles className="w-4 h-4 text-emerald-600" />
           ) : donationType === 'Whole blood' ? (
             <Droplet className="w-4 h-4 text-rose-600" />
           ) : (
-            <Layers className="w-4 h-4 text-rose-600" />
+            <Layers className="w-4 h-4 text-amber-600" />
           )}
           <span className="text-slate-600 font-medium">Selected Donation:</span>
           <span className="font-bold text-slate-900">{donationType}</span>
+          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+            donationType === 'Whole blood'
+              ? 'bg-rose-100 text-rose-800 border border-rose-200'
+              : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+          }`}>
+            {donationType === 'Whole blood' ? 'Mandatory A+ verified' : 'Any blood group fine'}
+          </span>
         </div>
         <span className="text-[11px] text-slate-500">1 date & 1 time slot</span>
       </div>
@@ -142,9 +149,14 @@ export const Step4Availability: React.FC<Step4Props> = ({
             }`}
           />
         </div>
-        <p className="text-[11px] text-slate-500">
-          Available between {minDateStr} and {maxDateStr}.
-        </p>
+        <div className="flex items-center justify-between flex-wrap gap-2 text-[11px] text-slate-500">
+          <span>Available between {formatDateDMY(minDateStr)} and {formatDateDMY(maxDateStr)}.</span>
+          {data.preferredDate && (
+            <span className="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md">
+              Selected: {formatDateDMY(data.preferredDate)}
+            </span>
+          )}
+        </div>
         {errors.preferredDate && <p className="text-xs text-rose-600 font-medium">{errors.preferredDate}</p>}
       </div>
 

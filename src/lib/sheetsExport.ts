@@ -1,4 +1,5 @@
 import { DonationBooking, DonorRegistration } from '../types';
+import { formatDateDMY, formatDateTimeDMY } from './coordinationEngine';
 
 function escapeCsvCell(value: unknown): string {
   if (value === null || value === undefined) return '""';
@@ -47,7 +48,7 @@ export function generateRegistrationsCsv(registrations: DonorRegistration[]): st
 
   const rows = registrations.map((r) => [
     r.id,
-    r.registeredAt,
+    formatDateTimeDMY(r.registeredAt),
     r.fullName,
     r.mobileNumber,
     r.bloodGroup,
@@ -59,20 +60,20 @@ export function generateRegistrationsCsv(registrations: DonorRegistration[]): st
     r.weightRange,
     r.feelsWellToday,
     r.foodAndHydration,
-    r.lastWholeBloodDate ? `${r.lastWholeBloodOption} (${r.lastWholeBloodDate})` : r.lastWholeBloodOption,
-    r.lastSdpDate ? `${r.lastSdpOption} (${r.lastSdpDate})` : r.lastSdpOption,
+    r.lastWholeBloodDate ? `${r.lastWholeBloodOption} (${formatDateDMY(r.lastWholeBloodDate)})` : r.lastWholeBloodOption,
+    r.lastSdpDate ? `${r.lastSdpOption} (${formatDateDMY(r.lastSdpDate)})` : r.lastSdpOption,
     r.otherDonationOrDeferral + (r.otherDonationOrDeferralNote ? `: ${r.otherDonationOrDeferralNote}` : ''),
-    r.tattooPiercing + (r.tattooDate ? ` (${r.tattooDate})` : ''),
+    r.tattooPiercing + (r.tattooDate ? ` (${formatDateDMY(r.tattooDate)})` : ''),
     r.feverInfection,
     r.medicationTreatment,
     r.surgeryTransfusion,
     r.travelInfection,
     r.eligibilityReviewStatus,
     r.eligibilityReviewNotes.join('; '),
-    r.preferredDate,
+    formatDateDMY(r.preferredDate),
     r.preferredTimeSlot,
     r.availabilityNote || '',
-    r.donorConsentTimestamp,
+    formatDateTimeDMY(r.donorConsentTimestamp),
   ]);
 
   const csvLines = [
@@ -110,19 +111,19 @@ export function generateBookingsCsv(bookings: DonationBooking[]): string {
     b.donorFullName,
     b.donorMobile,
     b.bloodGroup,
-    b.bookingDate,
+    formatDateDMY(b.bookingDate),
     b.timeSlot,
     b.donationType,
-    b.previousDonationDateChecked,
+    formatDateDMY(b.previousDonationDateChecked),
     b.previousDonationType,
     b.preliminaryIntervalCheckStatus,
     b.bookingStatus,
     b.hospitalEligibilityConfirmed,
-    b.hospitalConfirmationTimestamp || '',
-    b.actualDonationDate || '',
+    b.hospitalConfirmationTimestamp ? formatDateTimeDMY(b.hospitalConfirmationTimestamp) : '',
+    b.actualDonationDate ? formatDateDMY(b.actualDonationDate) : '',
     b.actualDonationType || '',
     b.notes || '',
-    b.createdAt,
+    formatDateTimeDMY(b.createdAt),
   ]);
 
   const csvLines = [

@@ -15,6 +15,7 @@ import {
   generateRegistrationsCsv,
   generateTsvForClipboard,
 } from '../../lib/sheetsExport';
+import { formatDateDMY, formatDateTimeDMY } from '../../lib/coordinationEngine';
 
 interface GoogleSheetsExportModalProps {
   isOpen: boolean;
@@ -78,7 +79,7 @@ export const GoogleSheetsExportModal: React.FC<GoogleSheetsExportModalProps> = (
       ];
       const rows = registrations.map((r) => [
         r.id,
-        r.registeredAt,
+        formatDateTimeDMY(r.registeredAt),
         r.fullName,
         r.mobileNumber,
         r.bloodGroup,
@@ -90,20 +91,20 @@ export const GoogleSheetsExportModal: React.FC<GoogleSheetsExportModalProps> = (
         r.weightRange,
         r.feelsWellToday,
         r.foodAndHydration,
-        r.lastWholeBloodDate ? `${r.lastWholeBloodOption} (${r.lastWholeBloodDate})` : r.lastWholeBloodOption,
-        r.lastSdpDate ? `${r.lastSdpOption} (${r.lastSdpDate})` : r.lastSdpOption,
+        r.lastWholeBloodDate ? `${r.lastWholeBloodOption} (${formatDateDMY(r.lastWholeBloodDate)})` : r.lastWholeBloodOption,
+        r.lastSdpDate ? `${r.lastSdpOption} (${formatDateDMY(r.lastSdpDate)})` : r.lastSdpOption,
         r.otherDonationOrDeferral + (r.otherDonationOrDeferralNote ? `: ${r.otherDonationOrDeferralNote}` : ''),
-        r.tattooPiercing + (r.tattooDate ? ` (${r.tattooDate})` : ''),
+        r.tattooPiercing + (r.tattooDate ? ` (${formatDateDMY(r.tattooDate)})` : ''),
         r.feverInfection,
         r.medicationTreatment,
         r.surgeryTransfusion,
         r.travelInfection,
         r.eligibilityReviewStatus,
         r.eligibilityReviewNotes.join('; '),
-        r.preferredDate,
+        formatDateDMY(r.preferredDate),
         r.preferredTimeSlot,
         r.availabilityNote || '',
-        r.donorConsentTimestamp,
+        formatDateTimeDMY(r.donorConsentTimestamp),
       ]);
       tsv = generateTsvForClipboard(headers, rows);
     } else {
@@ -133,19 +134,19 @@ export const GoogleSheetsExportModal: React.FC<GoogleSheetsExportModalProps> = (
         b.donorFullName,
         b.donorMobile,
         b.bloodGroup,
-        b.bookingDate,
+        formatDateDMY(b.bookingDate),
         b.timeSlot,
         b.donationType,
-        b.previousDonationDateChecked,
+        formatDateDMY(b.previousDonationDateChecked),
         b.previousDonationType,
         b.preliminaryIntervalCheckStatus,
         b.bookingStatus,
         b.hospitalEligibilityConfirmed,
-        b.hospitalConfirmationTimestamp || '',
-        b.actualDonationDate || '',
+        b.hospitalConfirmationTimestamp ? formatDateTimeDMY(b.hospitalConfirmationTimestamp) : '',
+        b.actualDonationDate ? formatDateDMY(b.actualDonationDate) : '',
         b.actualDonationType || '',
         b.notes || '',
-        b.createdAt,
+        formatDateTimeDMY(b.createdAt),
       ]);
       tsv = generateTsvForClipboard(headers, rows);
     }

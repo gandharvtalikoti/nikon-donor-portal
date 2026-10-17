@@ -74,9 +74,6 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
           <p className="text-xs text-slate-500 mt-1 leading-relaxed">
             Restricted to Nikon's family coordination team. Protects private donor contacts and medical screening responses.
           </p>
-          <p className="text-[11px] font-mono text-slate-400 mt-1">
-            Default Coordinator PIN: <span className="font-bold text-slate-700">{correctPin}</span>
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -119,13 +116,12 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
             <button
               type="button"
               onClick={() => {
-                setPin(correctPin);
-                onAuthenticate(correctPin);
-                onClose();
+                setPin('');
+                setError(false);
               }}
               className="h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold text-xs transition-colors cursor-pointer"
             >
-              Autofill
+              Clear
             </button>
             <button
               key="0"

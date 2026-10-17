@@ -66,8 +66,8 @@ export const DonorAppealBanner: React.FC<DonorAppealBannerProps> = ({ config }) 
               <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
               <span>Current Priority Need</span>
             </div>
-            <p className="text-slate-600 font-medium">Single Donor Platelets (SDP) & Whole Blood</p>
-            <p className="text-slate-600 mt-0.5">All compatible blood groups welcomed; A+, O+, B+ prioritized today.</p>
+            <p className="text-slate-700 font-medium">Whole Blood: <strong className="text-rose-700">Mandatory A+ Only</strong></p>
+            <p className="text-slate-600 mt-0.5">Single Donor Platelets (SDP): <strong className="text-emerald-700">Any Blood Group is fine</strong></p>
           </div>
 
           <div className="bg-white/80 p-3 rounded-xl border border-rose-100">

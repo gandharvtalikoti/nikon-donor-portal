@@ -130,7 +130,14 @@ export default function App() {
   }, []);
 
   const handleUpdateFormData = (updates: Partial<typeof formData>) => {
-    setFormData((prev) => ({ ...prev, ...updates }));
+    setFormData((prev) => {
+      const next = { ...prev, ...updates };
+      // If blood group is changed to non-A+, ensure Whole Blood or Either auto-switches to SDP
+      if (next.bloodGroup !== 'A+' && (next.donationType === 'Whole blood' || next.donationType.includes('Either'))) {
+        next.donationType = 'Single Donor Platelets (SDP)';
+      }
+      return next;
+    });
     setErrors({});
   };
 
@@ -169,6 +176,12 @@ export default function App() {
       }
       if (!formData.bloodGroup) {
         errs.bloodGroup = 'Please select a blood group (or Unknown).';
+      }
+    } else if (currentStepNum === 2) {
+      if (formData.donationType === 'Whole blood' && formData.bloodGroup !== 'A+') {
+        errs.donationType = `For Whole Blood donation, the donor HAS TO BE A+ (mandatory for Nikon). For Single Donor Platelets (SDP), any blood group is fine! Please select Single Donor Platelets (SDP).`;
+      } else if (formData.donationType.includes('Either') && formData.bloodGroup !== 'A+') {
+        errs.donationType = `Whole Blood requires mandatory A+ blood group. Since your blood group is ${formData.bloodGroup}, please choose Single Donor Platelets (SDP), where any blood group is fine!`;
       }
     } else if (currentStepNum === 3) {
       if (formData.ageYears === null || isNaN(formData.ageYears)) {
@@ -279,7 +292,7 @@ export default function App() {
         : 'Availability registered';
 
       const specificType: SpecificDonationType =
-        formData.donationType === 'Single Donor Platelets (SDP)'
+        formData.donationType === 'Single Donor Platelets (SDP)' || formData.bloodGroup !== 'A+'
           ? 'Single Donor Platelets (SDP)'
           : 'Whole blood';
 
@@ -530,10 +543,18 @@ export default function App() {
               )}
 
               {step === 2 && (
-                <Step2DonationType
-                  value={formData.donationType}
-                  onChange={(val) => handleUpdateFormData({ donationType: val })}
-                />
+                <div className="space-y-4">
+                  <Step2DonationType
+                    value={formData.donationType}
+                    bloodGroup={formData.bloodGroup}
+                    onChange={(val) => handleUpdateFormData({ donationType: val })}
+                  />
+                  {errors.donationType && (
+                    <div className="p-3 bg-rose-50 border border-rose-300 rounded-xl text-xs text-rose-800 font-semibold">
+                      {errors.donationType}
+                    </div>
+                  )}
+                </div>
               )}
 
               {step === 3 && (

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { DonorRegistration, BloodGroup, EligibilityReviewStatus } from '../../types';
+import { formatDateDMY, formatDateTimeDMY } from '../../lib/coordinationEngine';
 import { Search, Filter, AlertTriangle, CheckCircle, Clock, Eye, Edit3, X, MessageSquare, Phone } from 'lucide-react';
 
 interface RegistrationsSheetViewProps {
@@ -144,7 +145,7 @@ export const RegistrationsSheetView: React.FC<RegistrationsSheetViewProps> = ({
                       <td className="py-3 px-3.5 whitespace-nowrap">
                         <span className="font-mono font-bold text-slate-900 block">{r.id}</span>
                         <span className="text-[10px] text-slate-400">
-                          {new Date(r.registeredAt).toLocaleDateString()}
+                          {formatDateDMY(r.registeredAt)}
                         </span>
                       </td>
 
@@ -175,7 +176,7 @@ export const RegistrationsSheetView: React.FC<RegistrationsSheetViewProps> = ({
                           {r.donationType}
                         </span>
                         <span className="text-[10px] text-slate-400">
-                          Pref: {r.preferredDate} ({r.preferredTimeSlot.split('–')[0]?.trim()})
+                          Pref: {formatDateDMY(r.preferredDate)} ({r.preferredTimeSlot.split('–')[0]?.trim()})
                         </span>
                       </td>
 
@@ -199,10 +200,10 @@ export const RegistrationsSheetView: React.FC<RegistrationsSheetViewProps> = ({
                       <td className="py-3 px-3.5 whitespace-nowrap text-[11px]">
                         <div className="space-y-0.5">
                           <span className="block text-slate-600 truncate max-w-[150px]">
-                            WB: {r.lastWholeBloodDate || r.lastWholeBloodOption}
+                            WB: {r.lastWholeBloodDate ? formatDateDMY(r.lastWholeBloodDate) : r.lastWholeBloodOption}
                           </span>
                           <span className="block text-slate-500 truncate max-w-[150px]">
-                            SDP: {r.lastSdpDate || r.lastSdpOption}
+                            SDP: {r.lastSdpDate ? formatDateDMY(r.lastSdpDate) : r.lastSdpOption}
                           </span>
                         </div>
                       </td>
@@ -272,7 +273,7 @@ export const RegistrationsSheetView: React.FC<RegistrationsSheetViewProps> = ({
                 <span className="text-xs font-mono font-bold text-rose-600 block">{selectedReg.id}</span>
                 <h3 className="text-lg font-bold text-slate-900">{selectedReg.fullName}</h3>
                 <p className="text-xs text-slate-500">
-                  Registered: {new Date(selectedReg.registeredAt).toLocaleString()} · Blood Group: {selectedReg.bloodGroup}
+                  Registered: {formatDateTimeDMY(selectedReg.registeredAt)} · Blood Group: {selectedReg.bloodGroup}
                 </p>
               </div>
               <button
@@ -314,10 +315,10 @@ export const RegistrationsSheetView: React.FC<RegistrationsSheetViewProps> = ({
                 <div><strong>Weight Range:</strong> {selectedReg.weightRange}</div>
                 <div><strong>Feels Well Today:</strong> {selectedReg.feelsWellToday}</div>
                 <div><strong>Food & Hydration:</strong> {selectedReg.foodAndHydration}</div>
-                <div><strong>Last Whole Blood:</strong> {selectedReg.lastWholeBloodOption} {selectedReg.lastWholeBloodDate && `(${selectedReg.lastWholeBloodDate})`}</div>
-                <div><strong>Last SDP:</strong> {selectedReg.lastSdpOption} {selectedReg.lastSdpDate && `(${selectedReg.lastSdpDate})`}</div>
+                <div><strong>Last Whole Blood:</strong> {selectedReg.lastWholeBloodOption} {selectedReg.lastWholeBloodDate && `(${formatDateDMY(selectedReg.lastWholeBloodDate)})`}</div>
+                <div><strong>Last SDP:</strong> {selectedReg.lastSdpOption} {selectedReg.lastSdpDate && `(${formatDateDMY(selectedReg.lastSdpDate)})`}</div>
                 <div><strong>Other Component / Deferral:</strong> {selectedReg.otherDonationOrDeferral} {selectedReg.otherDonationOrDeferralNote && `(${selectedReg.otherDonationOrDeferralNote})`}</div>
-                <div><strong>Tattoos/Piercings:</strong> {selectedReg.tattooPiercing} {selectedReg.tattooDate && `(${selectedReg.tattooDate})`}</div>
+                <div><strong>Tattoos/Piercings:</strong> {selectedReg.tattooPiercing} {selectedReg.tattooDate && `(${formatDateDMY(selectedReg.tattooDate)})`}</div>
                 <div><strong>Fever/Infection:</strong> {selectedReg.feverInfection}</div>
                 <div><strong>Current Medication:</strong> {selectedReg.medicationTreatment}</div>
                 <div><strong>Surgery/Transfusion:</strong> {selectedReg.surgeryTransfusion}</div>

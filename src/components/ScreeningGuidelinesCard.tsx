@@ -27,6 +27,10 @@ export const ScreeningGuidelinesCard: React.FC<ScreeningGuidelinesCardProps> = (
       a: 'No. This form is strictly for voluntary preliminary screening and scheduling with Nikon’s family coordination team. Final medical fitness is evaluated in person at the hospital blood bank by a qualified medical officer, who will check hemoglobin, vitals, vein suitability, and blood screening tests.',
     },
     {
+      q: 'Which blood groups are accepted for Nikon?',
+      a: 'For Whole Blood donation, the donor HAS TO BE A+ (this is mandatory because Nikon specifically requires A+ whole blood). For Single Donor Platelets (SDP), ANY blood group is fine (A+, A−, B+, B−, AB+, AB−, O+, O−) and urgently welcomed, as apheresis platelets can be safely matched across groups!',
+    },
+    {
       q: 'Can I cancel or reschedule my time slot?',
       a: 'Yes. If your availability changes, please inform our family coordinator immediately via the hotline so the apheresis bed can be allocated to another volunteer without disrupting Nikon’s treatment schedule.',
     },
@@ -45,22 +49,32 @@ export const ScreeningGuidelinesCard: React.FC<ScreeningGuidelinesCardProps> = (
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="p-4 rounded-2xl bg-rose-50/50 border border-rose-100 space-y-2">
-          <div className="flex items-center gap-2 text-rose-800 font-bold text-xs uppercase tracking-wider">
-            <Droplet className="w-4 h-4 text-rose-600" />
-            <span>Whole Blood Donation</span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-rose-800 font-bold text-xs uppercase tracking-wider">
+              <Droplet className="w-4 h-4 text-rose-600" />
+              <span>Whole Blood Donation</span>
+            </div>
+            <span className="text-[10px] font-bold bg-rose-200/80 text-rose-900 px-2 py-0.5 rounded-md">
+              Mandatory A+ Only
+            </span>
           </div>
           <p className="text-xs text-slate-700 leading-relaxed">
-            Standard donation of 350ml or 450ml. Requires a minimum gap of <strong>3 months (90 days)</strong> between donations to replenish red blood cell hemoglobin stores.
+            Standard donation of 350ml or 450ml. For Nikon, <strong>the donor HAS TO BE A+ (mandatory)</strong>. Requires a minimum gap of <strong>3 months (90 days)</strong> between donations to replenish red blood cell hemoglobin stores.
           </p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-amber-50/50 border border-amber-100 space-y-2">
-          <div className="flex items-center gap-2 text-amber-800 font-bold text-xs uppercase tracking-wider">
-            <Sparkles className="w-4 h-4 text-amber-600" />
-            <span>Single Donor Platelets (SDP)</span>
+        <div className="p-4 rounded-2xl bg-emerald-50/50 border border-emerald-100 space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <span>Single Donor Platelets (SDP)</span>
+            </div>
+            <span className="text-[10px] font-bold bg-emerald-200/80 text-emerald-900 px-2 py-0.5 rounded-md">
+              Any Blood Group Fine
+            </span>
           </div>
           <p className="text-xs text-slate-700 leading-relaxed">
-            Apheresis process lasting 60–90 minutes. Requires a minimum gap of <strong>10 days</strong> between SDP sessions and good accessible veins in both arms.
+            Apheresis process lasting 60–90 minutes. <strong>Any blood group is fine and urgently needed!</strong> Requires a minimum gap of <strong>10 days</strong> between SDP sessions and good accessible veins in both arms.
           </p>
         </div>
       </div>

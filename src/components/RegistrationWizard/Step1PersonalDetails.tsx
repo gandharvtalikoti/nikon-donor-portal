@@ -1,6 +1,6 @@
 import React from 'react';
 import { BloodGroup, ContactMethod } from '../../types';
-import { User, Phone, Mail, MessageSquare, PhoneCall, HelpCircle } from 'lucide-react';
+import { User, Phone, Mail, MessageSquare, PhoneCall, HelpCircle, Droplet } from 'lucide-react';
 
 interface Step1Props {
   data: {
@@ -83,21 +83,47 @@ export const Step1PersonalDetails: React.FC<Step1Props> = ({ data, onChange, err
           </label>
           <span className="text-[11px] text-slate-500">Select Unknown if unsure</span>
         </div>
+
+        {/* Blood Group Requirement Guideline */}
+        <div className="p-3 bg-rose-50/70 border border-rose-200/90 rounded-xl text-xs text-rose-950 mb-2.5 flex items-start gap-2.5">
+          <Droplet className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+          <div className="text-[11px] leading-relaxed">
+            <span className="font-bold text-rose-900 block mb-0.5">Nikon's Medical Blood Requirements:</span>
+            <span>• <strong>Whole Blood:</strong> Donor <u className="font-semibold">HAS TO BE A+</u> (Mandatory).</span>
+            <br />
+            <span>• <strong>Single Donor Platelets (SDP):</strong> <u className="font-semibold">Any blood group is fine</u> and urgently needed!</span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
           {BLOOD_GROUPS.map((bg) => {
             const isSelected = data.bloodGroup === bg;
+            const isAplus = bg === 'A+';
             return (
               <button
                 key={bg}
                 type="button"
                 onClick={() => onChange({ bloodGroup: bg })}
-                className={`py-2.5 px-3 rounded-xl border text-center transition-all cursor-pointer font-bold text-sm ${
+                className={`py-2 px-2.5 rounded-xl border text-center transition-all cursor-pointer font-bold text-sm relative flex flex-col items-center justify-center ${
                   isSelected
                     ? 'border-rose-600 bg-rose-600 text-white shadow-xs'
+                    : isAplus
+                    ? 'border-rose-300 bg-rose-50/40 text-rose-900 hover:border-rose-400 hover:bg-rose-50'
                     : 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50'
                 }`}
               >
-                {bg}
+                <span>{bg}</span>
+                <span
+                  className={`text-[9px] font-medium tracking-tight mt-0.5 px-1 py-0.2 rounded-xs ${
+                    isSelected
+                      ? 'bg-white/20 text-white'
+                      : isAplus
+                      ? 'bg-rose-100 text-rose-800'
+                      : 'text-slate-400'
+                  }`}
+                >
+                  {isAplus ? 'WB + SDP' : 'SDP fine'}
+                </span>
               </button>
             );
           })}

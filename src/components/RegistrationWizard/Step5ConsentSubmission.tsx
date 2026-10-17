@@ -1,6 +1,7 @@
 import React from 'react';
 import { BloodGroup, DonationTypePreference } from '../../types';
 import { ShieldCheck, Check, Calendar, Clock, User, Phone, Droplet, AlertTriangle } from 'lucide-react';
+import { formatDateDMY } from '../../lib/coordinationEngine';
 
 interface Step5Props {
   data: {
@@ -64,17 +65,31 @@ export const Step5ConsentSubmission: React.FC<Step5Props> = ({
 
           <div className="flex items-center gap-2 text-slate-700">
             <Droplet className="w-4 h-4 text-rose-600 shrink-0" />
-            <span>Blood Group: <strong className="text-slate-900">{data.bloodGroup}</strong></span>
+            <span>
+              Blood Group: <strong className="text-slate-900">{data.bloodGroup}</strong>
+              <span className="text-[10px] text-slate-500 block">
+                {data.bloodGroup === 'A+'
+                  ? 'Eligible for Whole Blood & SDP'
+                  : 'Eligible for SDP (Any group fine)'}
+              </span>
+            </span>
           </div>
 
           <div className="flex items-center gap-2 text-slate-700">
             <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
-            <span>Donation: <strong className="text-slate-900">{data.donationType}</strong></span>
+            <span>
+              Donation: <strong className="text-slate-900">{data.donationType}</strong>
+              <span className="text-[10px] text-slate-500 block">
+                {data.donationType === 'Whole blood'
+                  ? 'Mandatory A+ blood group verified'
+                  : 'Platelets (Apheresis) - Any blood group fine'}
+              </span>
+            </span>
           </div>
 
           <div className="flex items-center gap-2 text-slate-700">
             <Calendar className="w-4 h-4 text-slate-400 shrink-0" />
-            <span>Preferred Date: <strong className="text-slate-900">{data.preferredDate || 'Not selected'}</strong></span>
+            <span>Preferred Date: <strong className="text-slate-900">{formatDateDMY(data.preferredDate)}</strong></span>
           </div>
 
           <div className="flex items-center gap-2 text-slate-700">

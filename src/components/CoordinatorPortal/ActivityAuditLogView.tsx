@@ -1,6 +1,7 @@
 import React from 'react';
 import { AdminActivityLog } from '../../types';
 import { History, Shield, Clock } from 'lucide-react';
+import { formatDateTimeDMY } from '../../lib/coordinationEngine';
 
 interface ActivityAuditLogViewProps {
   logs: AdminActivityLog[];
@@ -45,7 +46,7 @@ export const ActivityAuditLogView: React.FC<ActivityAuditLogViewProps> = ({ logs
                   <td className="py-2.5 px-3.5 whitespace-nowrap font-mono text-[11px] text-slate-500">
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3 text-slate-400" />
-                      <span>{new Date(log.timestamp).toLocaleString()}</span>
+                      <span>{formatDateTimeDMY(log.timestamp)}</span>
                     </div>
                   </td>
 

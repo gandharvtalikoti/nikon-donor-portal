@@ -14,6 +14,7 @@ import {
   Phone,
   FileCheck,
 } from 'lucide-react';
+import { formatDateDMY, formatDateTimeDMY } from '../../lib/coordinationEngine';
 
 interface BookingsManagementViewProps {
   bookings: DonationBooking[];
@@ -211,7 +212,7 @@ export const BookingsManagementView: React.FC<BookingsManagementViewProps> = ({
                       <td className="py-3 px-3.5 whitespace-nowrap">
                         <div className="flex items-center gap-1 font-bold text-slate-900">
                           <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                          <span>{b.bookingDate}</span>
+                          <span>{formatDateDMY(b.bookingDate)}</span>
                         </div>
                         <span className="text-[11px] text-slate-500 block">{b.timeSlot}</span>
                       </td>
@@ -229,7 +230,7 @@ export const BookingsManagementView: React.FC<BookingsManagementViewProps> = ({
 
                       <td className="py-3 px-3.5 whitespace-nowrap text-[11px]">
                         <span className="text-slate-800 font-medium block">
-                          {b.previousDonationDateChecked}
+                          {formatDateDMY(b.previousDonationDateChecked)}
                         </span>
                         <span className="text-[10px] text-slate-400">
                           Type: {b.previousDonationType}
@@ -279,7 +280,7 @@ export const BookingsManagementView: React.FC<BookingsManagementViewProps> = ({
                         </span>
                         {b.hospitalConfirmationTimestamp && (
                           <span className="block text-[10px] text-slate-400">
-                            {new Date(b.hospitalConfirmationTimestamp).toLocaleDateString()}
+                            {formatDateDMY(b.hospitalConfirmationTimestamp)}
                           </span>
                         )}
                       </td>
@@ -287,7 +288,7 @@ export const BookingsManagementView: React.FC<BookingsManagementViewProps> = ({
                       <td className="py-3 px-3.5 whitespace-nowrap text-[11px]">
                         {b.actualDonationDate ? (
                           <div>
-                            <span className="font-bold text-emerald-700 block">{b.actualDonationDate}</span>
+                            <span className="font-bold text-emerald-700 block">{formatDateDMY(b.actualDonationDate)}</span>
                             <span className="text-[10px] text-slate-500">{b.actualDonationType}</span>
                           </div>
                         ) : (

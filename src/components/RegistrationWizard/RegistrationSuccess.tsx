@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle2, Phone, Calendar, Heart, Shield, ArrowRight } from 'lucide-react';
 import { CoordinationConfig, DonationBooking, DonorRegistration } from '../../types';
+import { formatDateDMY } from '../../lib/coordinationEngine';
 
 interface RegistrationSuccessProps {
   registration: DonorRegistration;
@@ -50,7 +51,7 @@ export const RegistrationSuccess: React.FC<RegistrationSuccessProps> = ({
         </div>
         <div>
           <span className="text-slate-500 block">Requested Date & Time:</span>
-          <span className="font-semibold text-slate-900">{registration.preferredDate} ({registration.preferredTimeSlot})</span>
+          <span className="font-semibold text-slate-900">{formatDateDMY(registration.preferredDate)} ({registration.preferredTimeSlot})</span>
         </div>
         <div>
           <span className="text-slate-500 block">Screening Status:</span>

@@ -47,6 +47,50 @@ export function normalizePhone(phone: string): string {
 }
 
 /**
+ * Format any date string (YYYY-MM-DD or ISO) to DD-MM-YYYY
+ */
+export function formatDateDMY(dateInput?: string | null): string {
+  if (!dateInput) return '—';
+  const str = String(dateInput).trim();
+  if (/^\d{2}-\d{2}-\d{4}$/.test(str)) return str;
+
+  const ymdMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (ymdMatch) {
+    const [, y, m, d] = ymdMatch;
+    return `${d}-${m}-${y}`;
+  }
+
+  const d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+  return str;
+}
+
+/**
+ * Format any ISO datetime string to DD-MM-YYYY, HH:MM AM/PM
+ */
+export function formatDateTimeDMY(dateTimeInput?: string | null): string {
+  if (!dateTimeInput) return '—';
+  const d = new Date(dateTimeInput);
+  if (isNaN(d.getTime())) return String(dateTimeInput);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  let hours = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  const strTime = `${String(hours).padStart(2, '0')}:${minutes} ${ampm}`;
+  return `${day}-${month}-${year}, ${strTime}`;
+}
+
+/**
  * Derives age category from completed years
  */
 export function getAgeCategory(years: number | null): AgeCategory {
@@ -109,6 +153,7 @@ export function evaluateEligibility(
     surgeryTransfusion: YesNoUnsure;
     travelInfection: YesNoUnsure;
     preferredDate: string;
+    bloodGroup?: string;
   },
   config: CoordinationConfig = DEFAULT_CONFIG
 ): ScreeningResult {
@@ -118,6 +163,18 @@ export function evaluateEligibility(
   let intervalConflictMessage = '';
   let intervalStatus: IntervalCheckStatus = 'Passed preliminary interval';
   let earliestDate: string | undefined = undefined;
+
+  // 0. Blood group check for Whole Blood (Mandatory A+ for Nikon; Any group for SDP)
+  if (reg.donationType === 'Whole blood' && reg.bloodGroup && reg.bloodGroup !== 'A+') {
+    requiresReview = true;
+    notes.push(
+      `Whole Blood donation strictly mandates blood group A+ for Nikon (donor reported ${reg.bloodGroup}). For Single Donor Platelets (SDP), any blood group is fine and welcomed!`
+    );
+  } else if (reg.donationType.includes('Either') && reg.bloodGroup && reg.bloodGroup !== 'A+') {
+    notes.push(
+      `Donor reported blood group ${reg.bloodGroup}. Note: Whole blood requires mandatory A+, so donor is assigned to Single Donor Platelets (SDP), where any blood group is fine.`
+    );
+  }
 
   // 1. Age check
   if (reg.ageYears !== null && reg.ageYears !== undefined) {
@@ -173,7 +230,7 @@ export function evaluateEligibility(
         if (daysSince < config.wholeBloodIntervalDays) {
           const eligibleOn = addDays(reg.lastWholeBloodDate, config.wholeBloodIntervalDays);
           earliestDate = eligibleOn;
-          intervalConflictMessage = `Based on your last whole-blood donation on ${reg.lastWholeBloodDate}, the preliminary 3-month gap completes around ${eligibleOn}. Our family will verify with the blood bank before scheduling.`;
+          intervalConflictMessage = `Based on your last whole-blood donation on ${formatDateDMY(reg.lastWholeBloodDate)}, the preliminary 3-month gap completes around ${formatDateDMY(eligibleOn)}. Our family will verify with the blood bank before scheduling.`;
         }
       } else {
         intervalConflictMessage = 'Whole blood was donated within the last 3 months. Our family will verify the exact interval with the hospital blood bank.';
@@ -200,7 +257,7 @@ export function evaluateEligibility(
           if (!earliestDate || eligibleOn > earliestDate) {
             earliestDate = eligibleOn;
           }
-          intervalConflictMessage = `Based on your SDP donation on ${reg.lastSdpDate}, the preliminary 10-day gap completes on ${eligibleOn}. The hospital team will confirm your platelet count and interval.`;
+          intervalConflictMessage = `Based on your SDP donation on ${formatDateDMY(reg.lastSdpDate)}, the preliminary 10-day gap completes on ${formatDateDMY(eligibleOn)}. The hospital team will confirm your platelet count and interval.`;
         }
       } else if (!intervalConflictMessage) {
         intervalConflictMessage = 'SDP was donated within the last 10 days. The hospital team must confirm your applicable interval.';
