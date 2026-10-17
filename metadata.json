@@ -1,0 +1,8 @@
+{
+  "name": "Nikon Blood & Platelet Donor Portal",
+  "description": "Donor registration, eligibility screening, and hospital coordination portal for Nikon.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
